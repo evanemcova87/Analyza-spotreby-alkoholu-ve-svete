@@ -1,1 +1,0 @@
-# Projekt-ditig-ln-akademie-data-jaro-2022
