@@ -1,0 +1,140 @@
+CREATE OR REPLACE TABLE l1_urban_population AS
+
+SELECT CCL.ALPHA_3 AS country_code
+     , CCL.NAME AS country_name
+     , U.YEAR 
+     , CASE WHEN U.URBAN_POPULATION IN ('..','') THEN NULL 
+       ELSE ROUND(U.URBAN_POPULATION::FLOAT,2) -- PRETYPOVANI SLOUPCE URBAN_POPULATION NA FLOAT ZAOKROUHLENO NA DVE DESETINNA MISTA, PRAZNA POLE PREPSANA NA NULL
+       END AS URBAN_POPULATION
+FROM (
+  SELECT "Country_Name" as country_name
+     , "Country_Code" as country_code
+     , 2000 as year
+     , "2000_YR2000" as urban_population
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."urban_population"
+UNION
+SELECT "Country_Name" as country_name
+     , "Country_Code" as country_code
+     , 2001 as year
+     , "2001_YR2001" as urban_population
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."urban_population"
+UNION
+SELECT "Country_Name" as country_name
+     , "Country_Code" as country_code
+     , 2002 as year
+     , "2002_YR2002" as urban_population
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."urban_population"
+UNION
+SELECT "Country_Name" as country_name
+     , "Country_Code" as country_code
+     , 2003 as year
+     , "2003_YR2003" as urban_population
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."urban_population"
+UNION
+SELECT "Country_Name" as country_name
+     , "Country_Code" as country_code
+     , 2004 as year
+     , "2004_YR2004" as urban_population
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."urban_population"
+UNION
+SELECT "Country_Name" as country_name
+     , "Country_Code" as country_code
+     , 2005 as year
+     , "2005_YR2005" as urban_population
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."urban_population"
+UNION
+SELECT "Country_Name" as country_name
+     , "Country_Code" as country_code
+     , 2006 as year
+     , "2006_YR2006" as urban_population
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."urban_population"
+UNION
+SELECT "Country_Name" as country_name
+     , "Country_Code" as country_code
+     , 2007 as year
+     , "2007_YR2007" as urban_population
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."urban_population"
+UNION
+SELECT "Country_Name" as country_name
+     , "Country_Code" as country_code
+     , 2008 as year
+     , "2008_YR2008" as urban_population
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."urban_population"
+UNION
+SELECT "Country_Name" as country_name
+     , "Country_Code" as country_code
+     , 2009 as year
+     , "2009_YR2009" as urban_population
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."urban_population"
+UNION
+SELECT "Country_Name" as country_name
+     , "Country_Code" as country_code
+     , 2010 as year
+     , "2010_YR2010" as urban_population
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."urban_population"
+UNION
+SELECT "Country_Name" as country_name
+     , "Country_Code" as country_code
+     , 2011 as year
+     , "2011_YR2011"as urban_population
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."urban_population"
+UNION
+SELECT "Country_Name" as country_name
+     , "Country_Code" as country_code
+     , 2012 as year
+     , "2012_YR2012"as urban_population
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."urban_population"
+UNION
+SELECT "Country_Name" as country_name
+     , "Country_Code" as country_code
+     , 2013 as year
+     , "2013_YR2013"as urban_population
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."urban_population"
+UNION
+SELECT "Country_Name" as country_name
+     , "Country_Code" as country_code
+     , 2014 as year
+     , "2014_YR2014"as urban_population
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."urban_population"
+UNION
+SELECT "Country_Name" as country_name
+     , "Country_Code" as country_code
+     , 2015 as year
+     , "2015_YR2015"as urban_population
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."urban_population"
+UNION
+SELECT "Country_Name" as country_name
+     , "Country_Code" as country_code
+     , 2016 as year
+     , "2016_YR2016"as urban_population
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."urban_population"
+UNION
+SELECT "Country_Name" as country_name
+     , "Country_Code" as country_code
+     , 2017 as year
+     , "2017_YR2017"as urban_population
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."urban_population"
+UNION
+SELECT "Country_Name" as country_name
+     , "Country_Code" as country_code
+     , 2018 as year
+     , "2018_YR2018"as urban_population
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."urban_population"
+UNION
+SELECT "Country_Name" as country_name
+     , "Country_Code" as country_code
+     , 2019 as year
+     , "2019_YR2019"as urban_population
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."urban_population"
+UNION
+SELECT "Country_Name" as country_name
+     , "Country_Code" as country_code
+     , 2020 as year
+     , "2020_YR2020"as urban_population
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."urban_population") U
+
+LEFT JOIN COUNTRY_CODES_CLEAN CCL 
+ON U.COUNTRY_CODE = CCL.ALPHA_3
+
+WHERE CCL.ALPHA_3 IS NOT NULL
+;
