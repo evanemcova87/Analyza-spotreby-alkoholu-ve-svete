@@ -1,0 +1,14 @@
+CREATE OR REPLACE TABLE l1_consumption_of_alcohol AS
+
+SELECT COA."SpatialDimValueCode" as country_code_org
+     , CCL.ALPHA_3 AS country_code
+     , COA."Location" as country_name_org
+     , CCL.NAME AS country_name
+     , COA."Period"::int as year
+     , COA."Dim1" as sex
+     , ROUND(COA."FactValueNumeric"::float, 2) as consumption
+     , CCL.REGION as region
+     , CCL.SUB_REGION AS sub_region
+From "KEBOOLA_3335"."WORKSPACE_405199159"."consumption_of_alcohol" COA
+LEFT JOIN COUNTRY_CODES_CLEAN CCL ON COA."SpatialDimValueCode" = CCL.ALPHA_3
+WHERE CCL.ALPHA_3 IS NOT NULL;
