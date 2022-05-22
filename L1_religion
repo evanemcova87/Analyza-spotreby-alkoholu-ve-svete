@@ -1,0 +1,117 @@
+CREATE OR REPLACE TABLE l1_religion AS
+
+WITH religion_pomocne AS
+
+(SELECT CCL.ALPHA_3 AS country_code
+     , CASE WHEN RBC."Country" = 'Czech Republic' THEN 'Czechia'
+            WHEN RBC."Country" = 'Macedonia' THEN 'North Macedonia'
+            WHEN RBC."Country" = 'East Timor' THEN 'Timor-Leste'
+            WHEN RBC."Country" = 'Syria' THEN 'Syrian Arab Republic'
+            WHEN RBC."Country" = 'Republic of the Congo' THEN 'Congo'
+            WHEN RBC."Country" = 'Ivory Coast' THEN 'Cote d Ivoire'
+            WHEN RBC."Country" = 'Vietnam' THEN 'Viet Nam'
+            WHEN RBC."Country" = 'United Kingdom' THEN 'Great Britain'
+            WHEN RBC."Country" = 'Brunei' THEN 'Brunei Darussalam'
+            WHEN RBC."Country" = 'Democratic Republic of the Congo' THEN 'Congo Democratic Republic'
+            WHEN RBC."Country" = 'Swaziland' THEN 'Eswatini'
+            WHEN RBC."Country" = 'Russia' THEN 'Russian Federation'
+            WHEN RBC."Country" = 'Cape Verde' THEN 'Cabo Verde'
+            WHEN RBC."Country" = 'United States' THEN 'United States of America'
+            ELSE RBC."Country"
+            END AS country_name 
+     , CASE WHEN "Christianity" = '<0.1%' THEN 0
+            ELSE ROUND(REPLACE("Christianity", '%',''),1)
+            END AS christianity
+     , CASE WHEN "Non_Religious" = '<0.1%' THEN 0
+            WHEN "Non_Religious" LIKE '%amp;' THEN ROUND(REPLACE("Non_Religious", '%amp;',''),1)
+            ELSE ROUND(REPLACE("Non_Religious", '%',''),1)
+            END AS non_religious
+      , CASE WHEN "Islam" = '<0.1%' THEN 0
+            WHEN "Islam" LIKE '%amp;' THEN ROUND(REPLACE("Islam", '%amp;',''),1)
+            ELSE ROUND(REPLACE("Islam", '%',''),1)
+            END AS islam
+      , CASE WHEN "Hindusium" = '<0.1%' THEN 0
+            WHEN "Hindusium" LIKE '%amp;' THEN ROUND(REPLACE("Hindusium", '%amp;',''),1)
+            ELSE ROUND(REPLACE("Hindusium", '%',''),1)
+            END AS hinduism
+      , CASE WHEN "Indigenous" = '<0.1%' THEN 0
+            WHEN "Indigenous" LIKE '%amp;' THEN ROUND(REPLACE("Indigenous", '%amp;',''),1)
+            ELSE ROUND(REPLACE("Indigenous", '%',''),1)
+            END AS indigenous
+      , CASE WHEN "Judasim" = '<0.1%' THEN 0
+            WHEN "Judasim" LIKE '%amp;' THEN ROUND(REPLACE("Judasim", '%amp;',''),1)
+            ELSE ROUND(REPLACE("Judasim", '%',''),1)
+            END AS judaism
+      , CASE WHEN "Other" = '<0.1%' THEN 0
+            WHEN "Other" LIKE '%amp;' THEN ROUND(REPLACE("Other", '%amp;',''),1)
+            ELSE ROUND(REPLACE("Other", '%',''),1)
+            END AS other
+      , CASE WHEN "Buddhism" = '<0.1%' THEN 0
+            WHEN "Buddhism" LIKE '%amp;' THEN ROUND(REPLACE("Buddhism", '%amp;',''),1)
+            ELSE ROUND(REPLACE("Buddhism", '%',''),1)
+            END AS buddhism
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."religion_by_country" RBC
+
+LEFT JOIN "KEBOOLA_3335"."WORKSPACE_405199159"."COUNTRY_CODES_CLEAN" CCL
+    ON country_name = CCL.name
+)
+
+
+SELECT   country_code
+        ,country_name
+        ,religion_name
+        ,religion_percentage
+        ,RANK () OVER (PARTITION BY country_code ORDER BY religion_percentage DESC) AS rank
+                      
+FROM    (
+          SELECT  country_code
+                 ,country_name
+                 ,'christianity' AS religion_name
+                 ,christianity AS religion_percentage
+          FROM religion_pomocne
+          UNION
+          SELECT  country_code
+                 ,country_name
+                 ,'non-religious' AS religion_name
+                 ,non_religious AS religion_percentage
+          FROM religion_pomocne
+          UNION
+          SELECT  country_code
+                 ,country_name
+                 ,'islam' AS religion_name
+                 ,islam AS religion_percentage
+          FROM religion_pomocne
+          UNION
+          SELECT  country_code
+                 ,country_name
+                 ,'hinduism' AS religion_name
+                 ,hinduism AS religion_percentage
+          FROM religion_pomocne
+          UNION
+          SELECT  country_code
+                 ,country_name
+                 ,'indigenous' AS religion_name
+                 ,indigenous AS religion_percentage
+          FROM religion_pomocne
+          UNION
+          SELECT  country_code
+                 ,country_name
+                 ,'judaism' AS religion_name
+                 ,judaism AS religion_percentage
+          FROM religion_pomocne
+          UNION
+          SELECT  country_code
+                 ,country_name
+                 ,'other' AS religion_name
+                 ,other AS religion_percentage
+          FROM religion_pomocne
+          UNION
+          SELECT  country_code
+                 ,country_name
+                 ,'buddhism' AS religion_name
+                 ,buddhism AS religion_percentage
+          FROM religion_pomocne
+          )
+QUALIFY rank = 1
+ORDER BY country_name
+;
