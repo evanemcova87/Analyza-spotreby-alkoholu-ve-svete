@@ -1,0 +1,15 @@
+CREATE OR REPLACE TABLE l1_deaths_road AS
+
+SELECT 
+     CCL.ALPHA_3 AS country_code
+    ,CCL.NAME AS country_name
+    ,RTD."Year" AS year
+    ,RTD."Deaths_Road_injuries_Sex_Both_Age_All_Ages_Number"::INT AS deaths_road
+    ,CCL.region AS region
+    ,CCL.sub_region AS sub_region
+        
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."road-traffic-deaths" RTD
+LEFT JOIN COUNTRY_CODES_CLEAN CCL ON RTD."Code" = CCL.ALPHA_3
+
+WHERE country_code IS NOT NULL
+;
