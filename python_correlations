@@ -1,0 +1,37 @@
+
+import pandas as pd
+import pandas as pd
+df = pd.read_csv("in/tables/L2_FINAL_TABLE_BOTH_SEXES.csv")
+df.head()
+COUNTRY_CODE	COUNTRY_NAME	YEAR	SEX	REGION	SUB_REGION	CONSUMPTION	LIFE_EXPECTANCY	URBAN_POPULATION	GDP_PER_CAPITA	DEATHS_ROAD	SUICIDE	UNEMPLOYMENT
+0	COK	Cook Islands	2002	Both sexes	Oceania	Polynesia	3.43	NaN	NaN	NaN	5	NaN	NaN
+1	NIU	Niue	2006	Both sexes	Oceania	Polynesia	6.16	NaN	NaN	NaN	0	NaN	NaN
+2	COK	Cook Islands	2004	Both sexes	Oceania	Polynesia	6.08	NaN	NaN	NaN	5	NaN	NaN
+3	COK	Cook Islands	2016	Both sexes	Oceania	Polynesia	10.94	NaN	NaN	NaN	4	NaN	NaN
+4	COK	Cook Islands	2006	Both sexes	Oceania	Polynesia	6.60	NaN	NaN	NaN	5	NaN	NaN
+ #get unique regions
+regions = df.REGION.unique()        
+print(regions)
+['Oceania' 'Europe' 'Asia' 'Americas' 'Africa']
+# define columns
+cols = ['LIFE_EXPECTANCY','URBAN_POPULATION','GDP_PER_CAPITA','DEATHS_ROAD','SUICIDE','UNEMPLOYMENT']
+def get_corr(df,region):
+    df_f = df[df['REGION'] == region]
+    
+    df_corr = df_f.corr(method ='pearson').filter(items = ['CONSUMPTION'], axis=0)[cols]
+    df_corr['region'] = region
+    return df_corr
+# call function in loop 
+ls_df = [ get_corr(df,region) for region in regions]
+# concatinate to one dataframe
+results = pd.concat(ls_df)
+results
+LIFE_EXPECTANCY	URBAN_POPULATION	GDP_PER_CAPITA	DEATHS_ROAD	SUICIDE	UNEMPLOYMENT	region
+CONSUMPTION	0.837837	0.723476	0.952034	0.295379	-0.064129	-0.526479	Oceania
+CONSUMPTION	-0.337814	-0.047365	0.035727	0.275982	0.504486	-0.371657	Europe
+CONSUMPTION	0.274794	0.052755	-0.015815	0.117932	0.481526	0.069204	Asia
+CONSUMPTION	0.446096	0.097571	0.465968	0.263954	0.056726	0.058712	Americas
+CONSUMPTION	-0.165556	-0.022499	0.124785	-0.080567	0.203481	0.259959	Africa
+#save
+# results.to_csv('results.csv')
+
