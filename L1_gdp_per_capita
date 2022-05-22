@@ -1,0 +1,147 @@
+CREATE OR REPLACE TABLE l1_gdp_per_capita AS
+
+SELECT CCL.ALPHA_3 AS country_code
+     , U.COUNTRY_NAME
+     , U.YEAR 
+     , U.GDP_PER_CAPITA
+     , CCL.REGION AS region
+     , CCL.SUB_REGION AS sub_region
+FROM 
+(SELECT COUNTRY_NAME
+     , COUNTRY_CODE
+     , YEAR 
+     , REPLACE(GDP_PER_CAPITA, ',','') AS GDP_PER_CAPITA_1
+     , CASE WHEN GDP_PER_CAPITA in('n/a','') THEN NULL 
+       ELSE GDP_PER_CAPITA_1  
+       END AS GDP_PER_CAPITA_FIN
+     , CAST (GDP_PER_CAPITA_FIN AS DECIMAL(10,2)) AS GDP_PER_CAPITA
+  FROM (
+  SELECT "Country" as country_name
+     , "ISO" as country_code
+     , 2000 as year
+     , "2000" as gdp_per_capita
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."gdp_per_capita"
+UNION
+SELECT "Country" as country_name
+     , "ISO" as country_code
+     , 2001 as year
+     , "2001" as gdp_per_capita
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."gdp_per_capita"
+UNION
+SELECT "Country" as country_name
+     , "ISO" as country_code
+     , 2002 as year
+     , "2002" as gdp_per_capita
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."gdp_per_capita"
+UNION
+SELECT "Country" as country_name
+     , "ISO" as country_code
+     , 2003 as year
+     , "2003" as gdp_per_capita
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."gdp_per_capita"
+UNION
+SELECT "Country" as country_name
+     , "ISO" as country_code
+     , 2004 as year
+     , "2004" as gdp_per_capita
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."gdp_per_capita"
+UNION
+SELECT "Country" as country_name
+     , "ISO" as country_code
+     , 2005 as year
+     , "2005" as gdp_per_capita
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."gdp_per_capita"
+UNION
+SELECT "Country" as country_name
+     , "ISO" as country_code
+     , 2006 as year
+     , "2006" as gdp_per_capita
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."gdp_per_capita"
+UNION
+SELECT "Country" as country_name
+     , "ISO" as country_code
+     , 2007 as year
+     , "2007" as gdp_per_capita
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."gdp_per_capita"
+UNION
+SELECT "Country" as country_name
+     , "ISO" as country_code
+     , 2008 as year
+     , "2008" as gdp_per_capita
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."gdp_per_capita"
+UNION
+SELECT "Country" as country_name
+     , "ISO" as country_code
+     , 2009 as year
+     , "2009" as gdp_per_capita
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."gdp_per_capita"
+UNION
+SELECT "Country" as country_name
+     , "ISO" as country_code
+     , 2010 as year
+     , "2010" as gdp_per_capita
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."gdp_per_capita"
+UNION
+SELECT "Country" as country_name
+     , "ISO" as country_code
+     , 2011 as year
+     , "2011" as gdp_per_capita
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."gdp_per_capita"
+UNION
+SELECT "Country" as country_name
+     , "ISO" as country_code
+     , 2012 as year
+     , "2012" as gdp_per_capita
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."gdp_per_capita"
+UNION
+SELECT "Country" as country_name
+     , "ISO" as country_code
+     , 2013 as year
+     , "2013" as gdp_per_capita
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."gdp_per_capita"
+UNION
+SELECT "Country" as country_name
+     , "ISO" as country_code
+     , 2014 as year
+     , "2014" as gdp_per_capita
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."gdp_per_capita"
+UNION
+SELECT "Country" as country_name
+     , "ISO" as country_code
+     , 2015 as year
+     , "2015" as gdp_per_capita
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."gdp_per_capita"
+UNION
+SELECT "Country" as country_name
+     , "ISO" as country_code
+     , 2016 as year
+     , "2016" as gdp_per_capita
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."gdp_per_capita"
+UNION
+SELECT "Country" as country_name
+     , "ISO" as country_code
+     , 2017 as year
+     , "2017" as gdp_per_capita
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."gdp_per_capita"
+UNION
+SELECT "Country" as country_name
+     , "ISO" as country_code
+     , 2018 as year
+     , "2018" as gdp_per_capita
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."gdp_per_capita"
+UNION
+SELECT "Country" as country_name
+     , "ISO" as country_code
+     , 2019 as year
+     , "2019" as gdp_per_capita
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."gdp_per_capita"
+UNION
+SELECT "Country" as country_name
+     , "ISO" as country_code
+     , 2020 as year
+     , "2020" as gdp_per_capita
+FROM "KEBOOLA_3335"."WORKSPACE_405199159"."gdp_per_capita")) U
+
+LEFT JOIN COUNTRY_CODES_CLEAN CCL ON U.COUNTRY_CODE = CCL.ALPHA_3
+WHERE CCL.ALPHA_3 IS NOT NULL
+;
