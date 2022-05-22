@@ -1,0 +1,32 @@
+CREATE OR REPLACE TABLE l1_age_limit AS
+
+SELECT COUNTRY_CODE
+     , COUNTRY_NAME
+     , YEAR
+     , ROUND((BEER::INT + WINE::INT + SPIRITS::INT)/3,0) AS AGE_LIMIT
+
+FROM 
+
+    (SELECT CASE WHEN AL."Country" = 'Bolivia ' THEN 'BOL'
+                 WHEN AL."Country" = 'Micronesia ' THEN 'FSM'
+                 WHEN AL."Country" = 'Iran (Islamic Republic of)' THEN 'IRN'
+                 ELSE CCL.ALPHA_3
+            END AS COUNTRY_CODE
+         , CASE WHEN AL."Country" = 'Iran (Islamic Republic of)' THEN 'Iran'
+                ELSE AL."Country"
+           END AS COUNTRY_NAME
+         , AL."Year"::INT AS YEAR
+         , CASE WHEN "Beer" in ('Total ban', 'Subnational', 'No data', 'None', 'subnational', 'total ban') THEN NULL
+                ELSE "Beer"
+           END AS BEER
+         , CASE WHEN "Wine" in ('Total ban', 'Subnational', 'No data', 'None', 'subnational', 'total ban') THEN NULL
+                ELSE "Wine"
+           END AS WINE
+         , CASE WHEN "Spirits" in ('Total ban', 'Subnational', 'No data', 'None', 'subnational', 'total ban') THEN NULL
+                ELSE "Spirits"
+           END AS SPIRITS
+     
+    FROM "KEBOOLA_3335"."WORKSPACE_405199159"."age_limit" AL
+
+    LEFT JOIN "KEBOOLA_3335"."WORKSPACE_405199159"."COUNTRY_CODES_CLEAN" CCL
+    ON AL."Country" = CCL.name);
