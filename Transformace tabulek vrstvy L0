@@ -140,29 +140,3 @@ FROM "KEBOOLA_3335"."WORKSPACE_405199159"."life_expectancy") U
 LEFT JOIN COUNTRY_CODES_CLEAN CCL ON U.COUNTRY_CODE = CCL.ALPHA_3
 WHERE CCL.ALPHA_3 IS NOT NULL
 ;
-
-SELECT distinct country_name_org 
-FROM l1_life_expectancy
-WHERE country_code IS NULL;
-
-
-
-SELECT *                           --zobrazeni kontroly pro napr. Afghanistan
-FROM l1_life_expectancy
-WHERE country_name = 'Afghanistan'
-ORDER BY year ASC;
-
-SELECT *                           --pohled na NULLy
-FROM l1_life_expectancy
-WHERE life_expectancy IS NULL
-;
-
-DESC TABLE l1_life_expectancy;     --popis tabulky
-
--- VE SLOUPCI COUNTRY_CODE NEJSOU ZADNE DUPLICITY (TZN. I KODY VETSICH CELKU JSOU UNIKATNI)
-SELECT COUNTRY_CODE
-     , COUNT(*) 
-FROM l1_life_expectancy
-WHERE YEAR = 2000
-GROUP BY COUNTRY_CODE
-HAVING COUNT(*) > 1; 
