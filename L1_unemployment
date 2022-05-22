@@ -1,0 +1,139 @@
+CREATE OR REPLACE TABLE l1_unemployment AS
+
+SELECT CCL.ALPHA_3 AS country_code
+     , CCL.NAME AS country_name
+     , U.YEAR 
+     , CASE WHEN U.UNEMPLOYMENT IN ('', 'n/a') THEN NULL 
+       ELSE ROUND(U.UNEMPLOYMENT::FLOAT,2) -- PRETYPOVANI SLOUPCE UNEMPLOYMENT NA FLOAT ZAOKROUHLENO NA DVE DESETINNA MISTA, PRAZNA POLE PREPSANA NA NULL
+       END AS UNEMPLOYMENT
+FROM (
+
+    SELECT "ISO" AS COUNTRY_CODE
+         , "Country" as COUNTRY_NAME
+         , 2000 AS YEAR
+         , "2000" AS UNEMPLOYMENT
+    FROM "KEBOOLA_3335"."WORKSPACE_405199159"."unemployment"
+    UNION
+    SELECT "ISO" AS COUNTRY_CODE
+         , "Country" as COUNTRY_NAME
+         , 2001 AS YEAR
+         , "2001" AS UNEMPLOYMENT
+    FROM "KEBOOLA_3335"."WORKSPACE_405199159"."unemployment"
+    UNION
+    SELECT "ISO" AS COUNTRY_CODE
+         , "Country" as COUNTRY_NAME
+         , 2002 AS YEAR
+         , "2002" AS UNEMPLOYMENT
+    FROM "KEBOOLA_3335"."WORKSPACE_405199159"."unemployment"
+    UNION
+    SELECT "ISO" AS COUNTRY_CODE
+         , "Country" as COUNTRY_NAME
+         , 2003 AS YEAR
+         , "2003" AS UNEMPLOYMENT
+    FROM "KEBOOLA_3335"."WORKSPACE_405199159"."unemployment"
+    UNION
+    SELECT "ISO" AS COUNTRY_CODE
+         , "Country" as COUNTRY_NAME
+         , 2004 AS YEAR
+         , "2004" AS UNEMPLOYMENT
+    FROM "KEBOOLA_3335"."WORKSPACE_405199159"."unemployment"
+    UNION
+    SELECT "ISO" AS COUNTRY_CODE
+         , "Country" as COUNTRY_NAME
+         , 2005 AS YEAR
+         , "2005" AS UNEMPLOYMENT
+    FROM "KEBOOLA_3335"."WORKSPACE_405199159"."unemployment"
+    UNION
+    SELECT "ISO" AS COUNTRY_CODE
+         , "Country" as COUNTRY_NAME
+         , 2006 AS YEAR
+         , "2006" AS UNEMPLOYMENT
+    FROM "KEBOOLA_3335"."WORKSPACE_405199159"."unemployment"
+    UNION
+     SELECT "ISO" AS COUNTRY_CODE
+         , "Country" as COUNTRY_NAME
+         , 2007 AS YEAR
+         , "2007" AS UNEMPLOYMENT
+    FROM "KEBOOLA_3335"."WORKSPACE_405199159"."unemployment"
+    UNION
+    SELECT "ISO" AS COUNTRY_CODE
+         , "Country" as COUNTRY_NAME
+         , 2008 AS YEAR
+         , "2008" AS UNEMPLOYMENT
+    FROM "KEBOOLA_3335"."WORKSPACE_405199159"."unemployment"
+    UNION
+    SELECT "ISO" AS COUNTRY_CODE
+         , "Country" as COUNTRY_NAME
+         , 2009 AS YEAR
+         , "2009" AS UNEMPLOYMENT
+    FROM "KEBOOLA_3335"."WORKSPACE_405199159"."unemployment"
+    UNION
+    SELECT "ISO" AS COUNTRY_CODE
+         , "Country" as COUNTRY_NAME
+         , 2010 AS YEAR
+         , "2010" AS UNEMPLOYMENT
+    FROM "KEBOOLA_3335"."WORKSPACE_405199159"."unemployment"
+    UNION
+    SELECT "ISO" AS COUNTRY_CODE
+         , "Country" as COUNTRY_NAME
+         , 2011 AS YEAR
+         , "2011" AS UNEMPLOYMENT
+    FROM "KEBOOLA_3335"."WORKSPACE_405199159"."unemployment"
+    UNION
+    SELECT "ISO" AS COUNTRY_CODE
+         , "Country" as COUNTRY_NAME
+         , 2012 AS YEAR
+         , "2012" AS UNEMPLOYMENT
+    FROM "KEBOOLA_3335"."WORKSPACE_405199159"."unemployment"
+    UNION
+    SELECT "ISO" AS COUNTRY_CODE
+         , "Country" as COUNTRY_NAME
+         , 2013 AS YEAR
+         , "2013" AS UNEMPLOYMENT
+    FROM "KEBOOLA_3335"."WORKSPACE_405199159"."unemployment"
+    UNION
+    SELECT "ISO" AS COUNTRY_CODE
+         , "Country" as COUNTRY_NAME
+         , 2014 AS YEAR
+         , "2014" AS UNEMPLOYMENT
+    FROM "KEBOOLA_3335"."WORKSPACE_405199159"."unemployment"
+    UNION
+    SELECT "ISO" AS COUNTRY_CODE
+         , "Country" as COUNTRY_NAME
+         , 2015 AS YEAR
+         , "2015" AS UNEMPLOYMENT
+    FROM "KEBOOLA_3335"."WORKSPACE_405199159"."unemployment"
+    UNION
+    SELECT "ISO" AS COUNTRY_CODE
+         , "Country" as COUNTRY_NAME
+         , 2016 AS YEAR
+         , "2016" AS UNEMPLOYMENT
+    FROM "KEBOOLA_3335"."WORKSPACE_405199159"."unemployment"
+    UNION
+    SELECT "ISO" AS COUNTRY_CODE
+         , "Country" as COUNTRY_NAME
+         , 2017 AS YEAR
+         , "2017" AS UNEMPLOYMENT
+    FROM "KEBOOLA_3335"."WORKSPACE_405199159"."unemployment"
+    UNION
+    SELECT "ISO" AS COUNTRY_CODE
+         , "Country" as COUNTRY_NAME
+         , 2018 AS YEAR
+         , "2018" AS UNEMPLOYMENT
+    FROM "KEBOOLA_3335"."WORKSPACE_405199159"."unemployment"
+    UNION
+    SELECT "ISO" AS COUNTRY_CODE
+         , "Country" as COUNTRY_NAME
+         , 2019 AS YEAR
+         , "2019" AS UNEMPLOYMENT
+    FROM "KEBOOLA_3335"."WORKSPACE_405199159"."unemployment"
+    UNION
+    SELECT "ISO" AS COUNTRY_CODE
+         , "Country" as COUNTRY_NAME
+         , 2020 AS YEAR
+         , "2020" AS UNEMPLOYMENT
+    FROM "KEBOOLA_3335"."WORKSPACE_405199159"."unemployment") U
+    
+LEFT JOIN COUNTRY_CODES_CLEAN CCL ON U.COUNTRY_CODE = CCL.ALPHA_3
+WHERE CCL.ALPHA_3 IS NOT NULL
+;
