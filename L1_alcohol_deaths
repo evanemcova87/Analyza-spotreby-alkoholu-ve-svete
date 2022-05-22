@@ -1,0 +1,81 @@
+CREATE OR REPLACE TABLE l1_alcohol_deaths_sexes AS
+
+WITH ad_pomocne AS
+
+(SELECT
+       AD.country
+       ,CASE WHEN AD.country = 'Republic of Moldova' THEN 'Moldova'                                     --prejmenovani nekterych nazvu statu z alcohol_deaths
+             WHEN AD.country = 'Iran (Islamic Republic of)' THEN 'Iran'
+             WHEN AD.country = 'Venezuela (Bolivarian Republic of)' THEN 'Venezuela'
+             WHEN AD.country = 'United Republic of Tanzania' THEN 'Tanzania'
+             WHEN AD.country = 'Democratic Peoples Republic of Korea' THEN 'North Korea'
+             WHEN AD.country = 'Micronesia (Federated States of)' THEN 'Micronesia'
+             WHEN AD.country = 'Bolivia (Plurinational State of)' THEN 'Bolivia'
+             WHEN AD.country = 'United Kingdom of Great Britain and Northern Ireland' THEN 'Great Britain'
+             WHEN AD.country = 'Democratic Republic of the Congo' THEN 'Congo Democratic Republic'
+             WHEN AD.country = 'Republic of Korea' THEN 'South Korea'
+             ELSE AD.country
+        END AS country_added   
+      ,CCL.alpha_3 AS country_code
+      ,'2016'::INT AS year
+      ,CASE WHEN ad_bs2 in('No data','') THEN NULL                                                         --odstraneni "No data" z hodnot v tabulce
+         ELSE ad_bs2 
+       END AS ad_bs3
+      ,CAST (ad_bs3 AS FLOAT) AS alcohol_deaths_both_sexes
+      
+      ,CASE WHEN ad_m2 in('No data','') THEN NULL 
+         ELSE ad_m2 
+       END AS ad_m3
+      ,CAST (ad_m3 AS FLOAT) AS alcohol_deaths_male
+      
+      ,CASE WHEN ad_f2 in('No data','') THEN NULL 
+         ELSE ad_f2 
+       END AS ad_f3
+      ,CAST (ad_f3 AS FLOAT) AS alcohol_deaths_female
+FROM
+    (SELECT                                                                             --odstraneni dvojitych uvozovek z hodnot v tabulce
+       country
+       ,REPLACE(ad_bs1,'"', '') AS ad_bs2  
+       ,REPLACE(ad_m1,'"', '') AS ad_m2 
+       ,REPLACE(ad_f1,'"', '') AS ad_f2     
+        
+     FROM
+         (SELECT
+               SPLIT_PART("Country_Both_sexes_Male_Female",',',1)::STRING AS country
+              ,SPLIT_PART("Country_Both_sexes_Male_Female",',',2) AS ad_bs1
+              ,SPLIT_PART("Country_Both_sexes_Male_Female",',',3) AS ad_m1
+              ,SPLIT_PART("Country_Both_sexes_Male_Female",',',4) AS ad_f1            
+          FROM "alcohol_deaths")) AD
+            
+LEFT JOIN COUNTRY_CODES_CLEAN CCL ON COUNTRY_ADDED = CCL.NAME
+ )
+
+SELECT   country_code
+        ,country_name
+        ,year
+        ,sex
+        ,alcohol_deaths
+FROM (
+        SELECT country_code
+              ,country_added AS country_name
+              ,year
+              ,'Both sexes' AS sex
+              ,alcohol_deaths_both_sexes AS alcohol_deaths
+        FROM ad_pomocne
+        UNION
+        SELECT country_code
+              ,country_added AS country_name
+              ,year
+              ,'Male' AS sex
+              ,alcohol_deaths_male AS alcohol_deaths
+        FROM ad_pomocne
+        UNION
+        SELECT country_code
+              ,country_added AS country_name
+              ,year
+              ,'Female' AS sex
+              ,alcohol_deaths_female AS alcohol_deaths
+        FROM ad_pomocne)
+        
+ORDER BY country_name
+;
