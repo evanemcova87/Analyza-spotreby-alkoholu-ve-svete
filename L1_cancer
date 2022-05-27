@@ -1,0 +1,14 @@
+CREATE OR REPLACE TABLE l1_alcohol_cancer_deaths AS
+
+SELECT   C."SpatialDimValueCode" AS country_code_c
+        ,C."Location" AS country_name_c
+        ,CCL.ALPHA_3 AS country_code_CCL
+        ,CCL.NAME AS country_name_CCL
+        ,C."Period" AS year
+        ,C."Dim1" AS sex
+        ,C."FactValueNumeric" AS cancer_deaths
+FROM "cancer" C
+
+LEFT JOIN COUNTRY_CODES_CLEAN CCL ON C."SpatialDimValueCode" = CCL.ALPHA_3
+ORDER BY country_name_c
+;
