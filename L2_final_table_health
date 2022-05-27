@@ -1,0 +1,23 @@
+CREATE OR REPLACE TABLE l2_final_table_health AS
+
+SELECT  COA.country_code
+       ,COA.country_name
+       ,COA.region
+       ,COA.sub_region
+       ,COA.year
+       ,COA.sex
+       ,COA.consumption
+       ,ROUND(ACAD.cancer_deaths::FLOAT, 2)/100 AS cancer_alcohol_deaths
+       ,ROUND(ACID.cirrhosis_deaths::FLOAT, 2)/100 AS cirrhosis_alcohol_deaths
+       
+FROM L1_consumption_of_alcohol COA
+
+LEFT JOIN l1_alcohol_cancer_deaths ACAD
+ON ACAD.country_code_ccl = COA.country_code AND ACAD.sex = COA.sex
+
+LEFT JOIN L1_alcohol_cirrhosis_deaths ACID
+ON ACID.country_code_ccl = COA.country_code AND ACID.sex = COA.sex
+
+WHERE COA.year = 2016 AND ACAD.cancer_deaths <> '' AND ACID.cirrhosis_deaths <> ''
+ORDER BY country_name, sex
+;
